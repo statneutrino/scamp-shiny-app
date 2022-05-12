@@ -1,8 +1,8 @@
 library(markdown)
 
-navbarPage("Navbar!",
+navbarPage("Navbar!", theme = shinythemes::shinytheme("cyborg"),
            
-  tabPanel("Histogram",
+  tabPanel("Histogram", 
      
      # Sidebar layout with input and output definitions ----
      sidebarLayout(
@@ -45,6 +45,8 @@ navbarPage("Navbar!",
            
          )
   )),
+  
+  ## COMPARING DISTRIBUTIONS AND MEANS OF TWO GROUPS ##
   tabPanel("Compare",
            
     sidebarLayout(
@@ -52,7 +54,12 @@ navbarPage("Navbar!",
       sidebarPanel(
     
     titlePanel("Compare distribution and mean of two groups"),
-    
+    fluidRow(
+      column(6, br()),
+      column(6, 
+        checkboxInput("group2_checkbox", label = "Include second group?", value = FALSE),  
+      )
+    ),
     fluidRow(
       column(6,
          radioButtons(inputId = "compare_gender1", 
@@ -82,13 +89,43 @@ navbarPage("Navbar!",
                      min = 0,
                      max = 100,
                      value = c(0,100))
-      )
+      ),
+
+
+      
+    ),
+    fluidRow(
+      column(12,
+             sliderInput("bin_n",
+                         "Histogram bin size:",
+                         value = 5,
+                         min = 5,
+                         max = 200))
     )
   ),
-  mainPanel())
+  mainPanel(
+    tabsetPanel(type = "tabs",
+      tabPanel("Histogram", 
+               plotly::plotlyOutput("compare_hist")
+               ),
+      tabPanel("Compare Means", 
+               plotOutput("compare_violin"),
+               htmlOutput("t_test")
+               )
+      )
+  ))
   ),
+  
+  ## SHOWING REGRESSION LINE OF AGE WITH SCREENTIME ##
   tabPanel("Trend",
-
+    sidebarLayout(
+      sidebarPanel(
+        titlePanel("Relationship between age and screentime"),
+      ),
+      mainPanel(
+        
+      )
+    )
   ),
   tabPanel("About",
   )
