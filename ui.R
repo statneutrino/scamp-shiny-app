@@ -1,50 +1,7 @@
 library(markdown)
 
-navbarPage("Navbar!", theme = shinythemes::shinytheme("cyborg"),
+navbarPage("SCAMP Screentime Data Explorer", theme = shinythemes::shinytheme("cyborg"),
            
-  tabPanel("Histogram", 
-     
-     # Sidebar layout with input and output definitions ----
-     sidebarLayout(
-       
-       # Sidebar panel for inputs ----
-       sidebarPanel(
-         
-         verbatimTextOutput("Choose demographics to include in histogram"),
-         
-         # Input: SEX
-         radioButtons(inputId = "button_gender", 
-                      label = "Gender:",
-                      choices = c(
-                        "All" = "All",
-                        "Male" = "Female",
-                        "Female" = "Male")),
-         
-         # Input: AGE CATAEGORY
-         
-         sliderInput(inputId = "age_slider", 
-                     label = "Age range:",
-                     min = 0,
-                     max = 100,
-                     value = c(0,100)
-         ),
-         
-         # Input: Slider for the number of bins in histogram
-         sliderInput("n",
-                     "Histogram bin size:",
-                     value = 5,
-                     min = 5,
-                     max = 200)
-         
-         ),
-         
-         # Main panel for displaying outputs ----
-         mainPanel(
-           
-           tabPanel("Plot", plotOutput("plot"))
-           
-         )
-  )),
   
   ## COMPARING DISTRIBUTIONS AND MEANS OF TWO GROUPS ##
   tabPanel("Compare",
@@ -53,7 +10,7 @@ navbarPage("Navbar!", theme = shinythemes::shinytheme("cyborg"),
       
       sidebarPanel(
     
-    titlePanel("Compare distribution and mean of two groups"),
+    titlePanel("Compare screentime in two groups"),
     fluidRow(
       column(6, br()),
       column(6, 
@@ -97,7 +54,7 @@ navbarPage("Navbar!", theme = shinythemes::shinytheme("cyborg"),
     fluidRow(
       column(12,
              sliderInput("bin_n",
-                         "Histogram bin size:",
+                         "Number of histrogram intervals:",
                          value = 5,
                          min = 5,
                          max = 200))
@@ -108,10 +65,13 @@ navbarPage("Navbar!", theme = shinythemes::shinytheme("cyborg"),
       tabPanel("Histogram", 
                plotly::plotlyOutput("compare_hist")
                ),
-      tabPanel("Compare Means", 
-               plotOutput("compare_violin"),
+      tabPanel("Violin Plot", 
+               plotOutput("compare_violin")
+               ),
+      tabPanel("Compare Means",
+               plotOutput("compare_density"),
                htmlOutput("t_test")
-               )
+      )
       )
   ))
   ),
@@ -121,13 +81,55 @@ navbarPage("Navbar!", theme = shinythemes::shinytheme("cyborg"),
     sidebarLayout(
       sidebarPanel(
         titlePanel("Relationship between age and screentime"),
+        
+        # Checkbox option to determine whether to disaggregate trend for gender
+        checkboxInput(inputId = "sep_gender_trend", 
+                     label = "Fit separate trendline for each gender",
+                     value = FALSE),
+        
+        # Radio button to choose type of line to fit
+        radioButtons(inputId = "regression_type", 
+                      label = "Type of trendline to fit",
+                      choices = c(
+                        "Linear" = "linear",
+                        "Quadractic" = "quadratic",
+                        "LOESS" = "loess")),
+        
+        # Checkbox option to include confidence interval
+        checkboxInput(inputId = "conf_interval", 
+                      label = "Show confidence inteval for trend",
+                      value = FALSE)
+        
+        
       ),
       mainPanel(
-        
+        plotOutput("regression_line")
       )
     )
   ),
+  tabPanel("Most Used App",
+    sidebarLayout(
+     sidebarPanel(
+       
+       titlePanel("Most used apps"),
+       
+       checkboxInput(inputId = "sep_gender_trend", 
+                     label = "Show Male/Female split",
+                     value = FALSE),     
+     ),
+     mainPanel(
+       tabsetPanel(type = "tabs",
+                   tabPanel("Overview", 
+                            plotOutput("app_summary")
+                   ),
+                   tabPanel("By Age", 
+                            plotOutput("app_by_age")
+                   )
+       )
+     )) # end of main panel and page for "MOST USED APP"
+  ),
   tabPanel("About",
+    
   )
 )
 
