@@ -14,4 +14,4 @@ list.files(".secrets/")
 gs4_deauth()
 
 # Authenticate using token. If no browser opens, the authentication works.
-gs4_auth(cache = ".secrets", email = "advspiers@gmail.com")
+gs4_auth(cache = ".secrets", email = "[EMAIL ADDRESS]")
