@@ -2,7 +2,7 @@ library(tidyverse)
 library(googlesheets4)
 
 # Authorize access to Google spreadsheet
-gs4_auth(cache = ".secrets", email = "advspiers@gmail.com")
+gs4_auth(cache = ".secrets", email = "[YOUR EMAIL]")
     
 ui <- navbarPage("SCAMP Screentime Data Explorer", theme = shinythemes::shinytheme("cyborg"),
                      
