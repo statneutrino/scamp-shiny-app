@@ -1,7 +1,6 @@
-# scamp-shiny-app
-MAPPING SCREENTIME AT THE GREAT EXHIBITION ROAD FESTIVAL
+# scamp-shiny-app - Mapping Screentime at the Great Exhibition Road Festival
 
-# Background
+### Background
 This repository has the code for Great Exhibition Road Festival
 
 
