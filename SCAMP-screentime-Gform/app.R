@@ -1,5 +1,6 @@
 library(tidyverse)
 library(googlesheets4)
+library(markdown)
 
 # Authorize access to Google spreadsheet
 gs4_auth(cache = ".secrets", email = "advspiers@gmail.com")
@@ -132,7 +133,15 @@ ui <- navbarPage("SCAMP Screentime Data Explorer", theme = shinythemes::shinythe
               )) # end of main panel and page for "MOST USED APP"
     ),
     tabPanel("About",
-          
+             fluidRow(
+               column(6,
+                      includeMarkdown("about.md")
+               ),
+               column(3,
+                      img(class="img-polaroid",
+                          src="scamp.jpg",height="80%", width="80%", align="right")
+                )
+              )
     )
 )
 
@@ -142,6 +151,7 @@ server <- function(input, output) {
     age_options <- c("12 or under", "13-17", "18-25", "26-35", "36-45", "46-55", "56-65", "66-75", "76+")
     app_options <- c("Facebook", "Youtube", "Whatsapp", "Instgram", "WeChat", "Tiktok", "Snapchat", "Twitter", "Linkedin", "Other")
     
+    gform_df <- read_sheet("https://docs.google.com/spreadsheets/d/1tquDI6xRWkqs5UcUYj9QatYaiEmlhT9i0XNxv-YQQGM")
     df <- gform_df[,c(2:6)] %>%
         rename(!!!setNames(names(.), c("sex", "age", "hours", "minutes", "social_media"))) %>%
         mutate(screentime = round((hours * 60 + minutes)/60,2)) %>%
@@ -157,7 +167,8 @@ server <- function(input, output) {
             age > 75 ~ "76+",
             TRUE ~ NA_character_
         )) %>%
-        mutate(age_category = factor(age_category, levels=age_options))
+        mutate(age_category = factor(age_category, levels=age_options)) %>%
+        filter(sex %in% c("Male", "Female"))
 
     
     # Reactive expression for histograms and mean comparisons
@@ -326,6 +337,7 @@ server <- function(input, output) {
                 geom_smooth(method=trend_options()$smooth_options[1], formula = trend_options()$smooth_options[2],
                             se=trend_options()$shaded_se, alpha=0.5, fullrange = TRUE) + 
                 theme(text = element_text(size = 14)) +
+                xlab("Age / years") + ylab("Screentime / hrs") +
                 scale_fill_brewer(palette = "Pastel2") + 
                 scale_color_brewer(palette = "Pastel2")# + 
             #coord_cartesian(xlim = c(min_st, max_st))
@@ -343,23 +355,24 @@ server <- function(input, output) {
     })
     
     output$app_summary <- plotly::renderPlotly({
-        sex_agg_p <- ggplot(df %>% mutate(app = fct_relevel(fct_infreq(social_media), "Other", after = Inf)), 
-                            aes(x=app)) + 
-            geom_bar(fill="pink") + 
-            xlab("Most Used App") + 
-            ggdark::dark_theme_gray()
-        
-        sex_disagg_p <- ggplot(df %>% mutate(app = fct_relevel(fct_infreq(social_media), "Other", after = Inf)), 
-                               aes(x=app)) + 
-            geom_bar(aes(fill=sex), position="dodge") + 
-            xlab("Most Used App") + 
-            ggdark::dark_theme_gray()
-        
-        if(!app_bar_options()$male_female_split){
-            plotly::ggplotly(sex_agg_p)
-        } else{
-            plotly::ggplotly(sex_disagg_p)
-        }
+      sex_agg_p <- ggplot(df %>% mutate(app = fct_relevel(fct_infreq(social_media), "Other", after = Inf)), 
+                          aes(x=app)) + 
+        geom_bar(fill="pink") + 
+        xlab("Most Used App") + 
+        ggdark::dark_theme_gray()
+      
+      sex_disagg_p <- ggplot(df %>% 
+                               mutate(app = fct_relevel(fct_infreq(social_media), "Other", after = Inf)), 
+                             aes(x=app)) + 
+        geom_bar(aes(fill=sex), position="dodge") + 
+        xlab("Most Used App") + 
+        ggdark::dark_theme_gray()
+      
+      if(!app_bar_options()$male_female_split){
+        plotly::ggplotly(sex_agg_p)
+      } else{
+        plotly::ggplotly(sex_disagg_p)
+      }
     })
     
     
@@ -370,15 +383,16 @@ server <- function(input, output) {
             xlab("Most Used App") + labs(fill="Age") +
             ggdark::dark_theme_gray() + 
             facet_wrap( ~ sex) +
-            scale_fill_brewer(palette = "Accent")
+            scale_fill_brewer(palette = "YlOrRd")
         
         
-        sex_disagg_p <- ggplot(df %>% mutate(app = fct_relevel(fct_infreq(social_media), "Other", after = Inf)), 
+        sex_disagg_p <- ggplot(df %>% 
+                                 mutate(app = fct_relevel(fct_infreq(social_media), "Other", after = Inf)),
                                aes(x=app)) + 
             geom_bar(aes(fill=age_category), position="stack") + 
             xlab("Most Used App") + labs(fill="Age") +
             ggdark::dark_theme_gray() + 
-            scale_fill_brewer(palette = "Accent")
+            scale_fill_brewer(palette = "YlOrRd")
         
         if(app_bar_options()$male_female_split){
             sex_agg_p

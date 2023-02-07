@@ -12,10 +12,10 @@ function(input, output) {
     
     set.seed(100); df <- data.frame(
         sex = factor(ifelse(rbinom(N, 1, 0.5) == 0, "Female", "Male")),
-        age = rpois(N, 30) + rnorm(N, sd=6) %>% round(),
+        age = rpois(N, 40) + rnorm(N, sd=6) %>% round(),
         most_used = sample(app_options, N, replace = TRUE, prob = c(0.4, 0.3, rep(0.3/8, 8)))
     )
-    df$screentime <- rnorm(N, 8 * df$age + 60 + (as.numeric(df$sex)-1)*50, 30) %>% round(.)
+    df$screentime <- rnorm(N, 8 * df$age + 60 + (as.numeric(df$sex)-1)*50, 105) %>% round(.)
     df <- df %>%
         mutate(age_category = case_when(
             age <= 12 ~ "12 or under",
@@ -115,7 +115,7 @@ function(input, output) {
     output$compare_violin <- plotly::renderPlotly({
         set.seed(100); plotly::ggplotly(ggplot(compare_reactive(), aes(x=group, y=screentime, fill=group)) + 
                                             geom_violin(alpha=0.6) + theme(legend.position="none") + 
-                                            geom_point(shape = 21, size=1.5, position = position_jitterdodge(), color="black", alpha=1) +
+                                            geom_point(shape = 21, size=1.5, position = position_jitterdodge(jitter.width=0.2), color="black", alpha=1) +
                                             ggdark::dark_theme_gray() + labs(fill = "Group") +
                                             xlab("Group") + ylab("Screentime / hrs") + 
                                             scale_fill_brewer(palette = "Pastel2") + 
@@ -253,7 +253,7 @@ function(input, output) {
             xlab("Most Used App") + labs(fill="Age") +
             ggdark::dark_theme_gray() + 
             facet_wrap( ~ sex) +
-            scale_fill_brewer(palette = "Accent")
+            scale_fill_brewer(palette = "YlOrRd")
         
         
         sex_disagg_p <- ggplot(df %>% mutate(app = fct_relevel(fct_infreq(most_used), "Other", after = Inf)), 
@@ -261,7 +261,7 @@ function(input, output) {
             geom_bar(aes(fill=age_category), position="stack") + 
             xlab("Most Used App") + labs(fill="Age") +
             ggdark::dark_theme_gray() + 
-            scale_fill_brewer(palette = "Accent")
+            scale_fill_brewer(palette = "YlOrRd")
         
         if(app_bar_options()$male_female_split){
             sex_agg_p
