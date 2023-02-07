@@ -4,7 +4,7 @@ A R Shiny app for public engagement showcase: a customisable data visualisation 
 ## Background
 This repository has the code for R Shiny app that was used as part of a public engagement exhibition at the [Great Exhibition Road Festival](https://www.greatexhibitionroadfestival.co.uk/) in June 2022. 
 
-As part of my PhD I collected data for and analysed data from the [Study of Cognition, Adolescents and Mobile Phones (SCAMP)](https://scampstudy.org/) is a prospective secondary school-based cohort study established to investigate 
+As part of my PhD I analysed data from the [Study of Cognition, Adolescents and Mobile Phones (SCAMP)](https://scampstudy.org/), a prospective secondary school-based cohort study established to investigate 
 whether use of mobile phones and other wireless devices are associated with cognitive, behavioural, educational, physical and mental health outcomes 
 during adolescence. 
 
