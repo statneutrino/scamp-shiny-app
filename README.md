@@ -1,5 +1,5 @@
 # scamp-shiny-appdata visualisation
-A R Shiny app for public engagement showcase: a customisable data visualisation app to view anonymous questionnaire data about and view data visualisations in real time.
+A R Shiny app for public engagement showcase: a customisable data visualisation app to view anonymous questionnaire data about and view data visualisations in real time. You can use the dashboard yourself at [https://statneutrino.shinyapps.io/SCAMP-screentime-Gform](https://statneutrino.shinyapps.io/SCAMP-screentime-Gform)
 
 ## Background
 This repository has the code for R Shiny app that was used as part of a public engagement exhibition at the [Great Exhibition Road Festival](https://www.greatexhibitionroadfestival.co.uk/) in June 2022. 
