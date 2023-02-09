@@ -8,7 +8,7 @@ As part of my PhD I analysed data from the [Study of Cognition, Adolescents and 
 whether use of mobile phones and other wireless devices are associated with cognitive, behavioural, educational, physical and mental health outcomes 
 during adolescence. 
 
-In 2022, we wanted to do a public engagement event, espeically with adolescents as our target audience, with the objectives:
+In 2022, we wanted to do a public engagement event, especially with adolescents as our target audience, with the objectives:
 - showcase the research process of epidemiology through simple statistical summary, descriptive, and inferential statistics through live data visualisation
 - explain the objectives of SCAMP and describe hoew the public can be involved in research
 - development of meaningful engagement activities that could be used again, e.g., in schools  
